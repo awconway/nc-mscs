@@ -1,0 +1,755 @@
+---
+title: Development of the Nursing Confidence in Managing Sedation Complications
+  Scale (NC-MSCS)
+output:
+  html_notebook: default
+  pdf_document: default
+  word_document: default
+---
+
+#Introduction
+Prompt detection and initiation of appropriate treatment for sedation-related complications is vital to ensure patient safety during nurse-administered procedural sedation and analgesia (PSA). People will exert maximal effort and persist despite failure if they believe they are capable in completing a given task. It is possible that nurses may not take necessary actions to manage sedation-related complications if they lack confidence in their abilities to complete the task. The aim of this study was to develop and validate the nursing confidence in managing sedation complications scale (NCMSCS). 
+
+#Methods
+A draft version of the NC-MSCS was developed from clinical practice guidelines. An expert panel of nurses and medical practitioners who have expertise in anaesthesia or PSA were asked to rate the relevance of each item. Items with a content validity index of less than 0.78 were revised and those with very low index values were deleted. To evaluate the psychometric properties of the revised scale, an online survey was distributed to nurses who were members of operating theatre, endoscopy, cardiac cath lab, radiology and critical care specialty nursing associations. Exploratory factor analysis was undertaken to provide evidence of the structural validity of the scale. 
+
+*Load data*
+
+```{r}
+load("data/data.Rdata")
+```
+
+##Descriptive statistics for the sample
+```{r}
+library(psych)
+data$GSES=rowMeans(data[,14:21], na.rm = TRUE)
+variables=c(7:9,22:23,58)
+kableExtra::kable(describe(data[,variables]), caption="Descriptive statistics")
+##need to also add in factor variable descriptives.
+``` 
+##Missing data analysis
+
+```{r}
+df=data[,24:57]
+```
+
+The percent of missing data:
+```{r}
+(sum(is.na(df))/prod(dim(df)))*100
+```
+
+Impute with expectation maximisation
+
+```{r}
+library(TestDataImputation)
+df1=EMimpute(df, Mvalue = "NA", max.score = 7)
+```
+
+*Prepare dataframe for exploratory factor analysis*
+Delete items:
+Sedation reversal – worded with more than one part in the question
+Laryngeal mask airway – not all trained for this
+AssessLevel Sedation - wording was too similar to identify over-sedation
+
+```{r}
+df1$Medication=NULL
+df1$LMA=NULL
+df1$AssessLevelSedation=NULL
+```
+
+```{r}
+describe(df1)
+```
+
+```{r}
+summary(df1)
+```
+
+*Box plots of item distributions from https://towardsdatascience.com/a-gentle-guide-to-statistics-in-r-ccb91cc1177e*
+
+```{r}
+library(tidyr)
+#create long dataframe
+dflong=gather(df1,key=Item, value=Confidence)
+#Change item names
+library(plyr)
+dflong$Item=mapvalues(dflong$Item, from = c("RiskHistory" ,        "RiskOSA"       ,          "DifficultIntubate"    ,   "DifficultBMV"           
+,"RiskASA"        ,            "RiskBMI"          ,       "RiskCardioresp",
+"IdentifyHypoventilation", "IdentifyRespRate"    ,    "IdentifyAllergy"  ,
+ "IdentifyBradycardia"   ,  "IdentifyHypotension"     ,         "RespondHypoventilation" ,
+ "RespondHypoxia"      ,      "RespondBradycardia"    ,  "RespondHypotension" ,
+"NontechAssess"  ,"NontechAccessAssist","NontechRespond",
+"OPA"     ,                "NPA"          ,           "JawSupport"  ,           
+"ChinLift", "BMV", "IdentifyLaryngospasm", "IdentifyObstruction", "IdentifyOversedation", "NontechIdentifyAssist", "RespondObstruction", "RiskComorbid", "RiskFrailty"), to = c("Assess risk from anaesthetic history" ,        "Assess risk from sleep apnoea"       ,          "Determine risk for difficult intubation"    ,   "Determine risk for difficult bag mask ventilation"           
+,"Assess risk from ASA classification status"        ,            "Assess risk from body mass index"          ,       "Assess risk from cardiorespiratory reserve",
+"Identify hypoventilation", "Identify abnormal respiratory rate"    ,    "Identify allergic reactions"  ,
+ "Identify bradycardia"   ,  "Identify hypotension"     ,         "Respond to hypoventilation" ,
+ "Respond to hypoxia"      ,      "Respond to bradycardia"    ,  "Respond to hypotension" ,
+"Cease procedure to assess patient"  ,"Cease procedure to gain extra assistance","Cease procedure to treat complication",
+"Insert oropharyngeal airway"     ,                "Insert nasopharyngeal airway"          ,           "Apply jaw support"  ,           
+"Apply chin lift", "Perform bag-mask ventilation", "Identify laryngospasm", "Identify airway obstruction", "Identify oversedation", "Identify when extra assistance required", "Respond to airway obstruction", "Assess risk from comorbidities", "Assess risk from frailty assessment"))
+library(ggplot2)
+ggplot(data = dflong, # add the data
+       aes(x = Item, y = Confidence, # set x, y coordinates
+           color = Item)) +    # color by item
+  geom_boxplot() +
+theme(axis.ticks = element_blank(), axis.text.x = element_blank())
+```
+
+
+
+##Test factorability using KMO
+
+```{r}
+KMO(df1)
+```
+
+## Determine Number of Factors to Extract
+```{r}
+library(nFactors)
+polycor=polychoric(df1, smooth = FALSE)
+ev <- eigen(cor(polycor$rho))
+ap <- parallel(subject=nrow(polycor$rho),var=ncol(polycor$rho),
+  rep=100,cent=.05, model="factors")
+nS <- nScree(x=ev$values, aparallel=ap$eigen$qevpea)
+plotnScree(nS)
+```
+
+
+##Exploratory factor analysis
+
+###Trial of 3 factors
+
+```{r}
+df3=df1
+polycor=polychoric(df3, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 3, rotate = "Promax", fm="ols")
+factor
+```
+
+Conceptualise factor structure as:
+1. a factor for assessing risk of and identification of airway complications
+2. A factor for treating airway complications
+3. Other complications
+
+Remove RiskComorbidity because difference <0.15
+
+```{r}
+df3$RiskComorbid=NULL
+polycor=polychoric(df3, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 3, rotate = "Promax", fm="ols")
+factor
+```
+
+Remove IdentifyHypoventilation becuase difference <0.15
+
+```{r}
+df3$IdentifyHypoventilation=NULL
+polycor=polychoric(df3, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 3, rotate = "Promax", fm="ols")
+factor
+```
+
+Remove BMV as difference <0.15
+
+```{r}
+df3$BMV=NULL
+polycor=polychoric(df3, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 3, rotate = "Promax", fm="ols")
+factor
+```
+
+Remove RespondObstruction because difference <0.15
+
+```{r}
+df3$RespondObstruction=NULL
+polycor=polychoric(df3, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 3, rotate = "Promax", fm="ols")
+factor
+```
+
+Remove RiskFrailty because it loaded on the wrong factor
+
+```{r}
+df3$RiskFrailty=NULL
+polycor=polychoric(df3, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 3, rotate = "Promax", fm="ols")
+factor
+```
+
+Remove NontechAccessAssist because of Heywood case
+
+```{r}
+df3$NontechAccessAssist=NULL
+polycor=polychoric(df3, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 3, rotate = "Promax", fm="ols")
+factor
+```
+
+This solution identified a factor structure consisting of:
+1. Advanced airway assessment skills
+2. Technical skills related to airway patency
+3. General skills related to identifying and responding to sedation-related complications.
+
+
+##Create scale and subscale scores for 3 factor solution
+
+
+```{r}
+MSCS.keys.3=list(advanced=c("RiskHistory" ,        "RiskOSA"       ,          "DifficultIntubate"    ,   "DifficultBMV"           
+,"RiskASA"        ,            "RiskBMI"          ,       "RiskCardioresp", "IdentifyLaryngospasm", "IdentifyObstruction"),
+general=c("IdentifyRespRate"    ,    "IdentifyAllergy"  , "IdentifyOversedation",
+ "IdentifyBradycardia"   ,  "IdentifyHypotension"     ,         "RespondHypoventilation" ,
+ "RespondHypoxia"      ,      "RespondBradycardia"    ,  "RespondHypotension" ,"NontechAssess"  ,"NontechIdentifyAssist","NontechRespond"  ),
+airway=c("OPA"     ,                "NPA"          ,           "JawSupport"  ,           
+"ChinLift" ),
+total=c("RiskHistory" ,        "RiskOSA"       ,          "DifficultIntubate"    ,   "DifficultBMV"           
+,"RiskASA"        ,            "RiskBMI"          ,       "RiskCardioresp", "IdentifyLaryngospasm", "IdentifyObstruction", "IdentifyOversedation",
+ "IdentifyRespRate"    ,    "IdentifyAllergy"  ,
+ "IdentifyBradycardia"   ,  "IdentifyHypotension"     ,         "RespondHypoventilation" ,
+ "RespondHypoxia"      ,      "RespondBradycardia"    ,  "RespondHypotension" ,
+"NontechAssess"  ,"NontechAccessAssist","NontechRespond",
+"OPA"     ,                "NPA"          ,           "JawSupport"  ,           
+"ChinLift"))
+```
+
+
+```{r}
+my.scales.3=scoreItems(MSCS.keys.3, df1)
+my.scores.3=my.scales.3$scores
+```
+
+
+Add scale scores to data frame
+
+```{r}
+data$advanced=my.scores.3[,1]
+data$general=my.scores.3[,2]
+data$airway=my.scores.3[,3]
+data$total.3=my.scores.3[,4]
+```
+
+Describe scale scores
+
+```{r}
+plyr::count(data$advanced)
+plyr::count(data$airway)
+plyr::count(data$general)
+plyr::count(data$total.3)
+```
+
+
+*Start of alternative 3 factor solution: Remove RiskFrailty because it loaded on the wrong factor*
+
+```{r}
+df3alt=df1
+df3alt$RiskFrailty=NULL
+polycor=polychoric(df3alt, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 3, rotate = "Promax", fm="ols")
+factor
+```
+
+Remove RiskComorbid because difference <0.15
+
+```{r}
+df3alt$RiskComorbid=NULL
+polycor=polychoric(df3alt, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 3, rotate = "Promax", fm="ols")
+factor
+```
+
+Remove IdentifyLaryngospasm because it loaded on the wrong factor
+```{r}
+df3alt$IdentifyLaryngospasm=NULL
+polycor=polychoric(df3alt, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 3, rotate = "Promax", fm="ols")
+factor
+```
+
+Remove IdentifyObstruction because it loaded on the wrong factor
+
+```{r}
+df3alt$IdentifyObstruction=NULL
+polycor=polychoric(df3alt, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 3, rotate = "Promax", fm="ols")
+factor
+```
+
+Remove IdentifyHypoventilation because difference was <0.15
+
+```{r}
+df3alt$IdentifyHypoventilation=NULL
+polycor=polychoric(df3alt, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 3, rotate = "Promax", fm="ols")
+factor
+```
+
+Remove RespondHypoventilation because difference was <0.15
+
+```{r}
+df3alt$RespondHypoventilation=NULL
+polycor=polychoric(df3alt, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 3, rotate = "Promax", fm="ols")
+factor
+```
+
+###Trial of 4 factor structure
+
+
+```{r}
+df4=df1
+polycor=polychoric(df4, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 4, rotate = "Promax", fm="ols")
+factor
+```
+
+Remove IdentifyLaryngospasm because it loaded highly on the wrong factor
+
+```{r}
+df4$IdentifyLaryngospasm=NULL
+polycor=polychoric(df4, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 4, rotate = "Promax", fm="ols")
+factor
+```
+
+Remove RiskFrailty because it loaded on wrong factor*
+
+```{r}
+df4$RiskFrailty=NULL
+polycor=polychoric(df4, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 4, rotate = "Promax", fm="ols")
+factor
+```
+
+Remove RespondObstruction – loaded on more than one factor with difference <0.15*
+
+```{r}
+df4$RespondObstruction=NULL
+polycor=polychoric(df4, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 4, rotate = "Promax", fm="ols")
+factor
+```
+
+Remove RiskComorbidity because it loaded highly on two factors with difference <0.15 between factors*
+
+```{r}
+df4$RiskComorbid=NULL
+polycor=polychoric(df4, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 4, rotate = "Promax", fm="ols")
+factor
+```
+
+Remove Identifyobstruction – loaded on wrong factor*
+
+```{r}
+df4$IdentifyObstruction=NULL
+polycor=polychoric(df4, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 4, rotate = "Promax", fm="ols")
+factor
+```
+
+
+Remove NontechIdentifyAssist because loaded highly on two factors with <0.15 difference*
+
+```{r}
+df4$NontechIdentifyAssist=NULL
+polycor=polychoric(df4, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 4, rotate = "Promax", fm="ols")
+factor
+```
+
+Remove BMV loaded less than 0.4 on all factors*
+
+```{r}
+df4$BMV=NULL
+polycor=polychoric(df4, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 4, rotate = "Promax", fm="ols")
+factor
+```
+
+Remove IdentifyOversedation loaded less than 0.4 on all factors*
+
+```{r}
+df4$IdentifyOversedation=NULL
+polycor=polychoric(df4, smooth = FALSE)
+factor=fa(polycor$rho, nfactors = 4, rotate = "promax", fm="ols")
+```
+
+```{r}
+print(factor)
+```
+
+
+## Create scale and subscale scores
+
+
+```{r}
+MSCS.keys=list(risk=c("RiskHistory" ,        "RiskOSA"       ,          "DifficultIntubate"    ,   "DifficultBMV"           
+,"RiskASA"        ,            "RiskBMI"          ,       "RiskCardioresp"),
+identify=c("IdentifyHypoventilation", "IdentifyRespRate"    ,    "IdentifyAllergy"  ,
+ "IdentifyBradycardia"   ,  "IdentifyHypotension"     ,         "RespondHypoventilation" ,
+ "RespondHypoxia"      ,      "RespondBradycardia"    ,  "RespondHypotension"   ),
+nontech=c("NontechAssess"  ,"NontechAccessAssist","NontechRespond" ),
+tech=c("OPA"     ,                "NPA"          ,           "JawSupport"  ,           
+"ChinLift" ),
+total=c("RiskHistory" ,        "RiskOSA"       ,          "DifficultIntubate"    ,   "DifficultBMV"           
+,"RiskASA"        ,            "RiskBMI"          ,       "RiskCardioresp",
+"IdentifyHypoventilation", "IdentifyRespRate"    ,    "IdentifyAllergy"  ,
+ "IdentifyBradycardia"   ,  "IdentifyHypotension"     ,         "RespondHypoventilation" ,
+ "RespondHypoxia"      ,      "RespondBradycardia"    ,  "RespondHypotension" ,
+"NontechAssess"  ,"NontechAccessAssist","NontechRespond",
+"OPA"     ,                "NPA"          ,           "JawSupport"  ,           
+"ChinLift"))
+```
+
+
+```{r}
+my.scales=scoreItems(MSCS.keys, df1)
+my.scores=my.scales$scores
+```
+
+
+Add scale scores to data frame
+
+```{r}
+data$risk=my.scores[,1]
+data$identify=my.scores[,2]
+data$nontech=my.scores[,3]
+data$tech=my.scores[,4]
+data$total=my.scores[,5]
+```
+
+###Describe scale scores
+
+```{r}
+plyr::count(data$tech)
+plyr::count(data$nontech)
+plyr::count(data$risk)
+plyr::count(data$identify)
+plyr::count(data$total)
+plyr::count(data$OverallConfidence)
+describe(data[,58:62])
+```
+
+
+
+*Plot from: https://rpubs.com/danmirman/plotting_factor_analysis*
+```{r}
+
+t=as.table(print(factor$loadings))
+t1=as.data.frame(t)
+library(plyr)
+t1$Var2=mapvalues(t1$Var2, from = c("A", "B", "C", "D"), to = c("Identify and respond", "Risk assessment", "Technical skills", "Non-technical skills"))
+t1$Var1=mapvalues(t1$Var1, from = c("RiskHistory" ,        "RiskOSA"       ,          "DifficultIntubate"    ,   "DifficultBMV"           
+,"RiskASA"        ,            "RiskBMI"          ,       "RiskCardioresp",
+"IdentifyHypoventilation", "IdentifyRespRate"    ,    "IdentifyAllergy"  ,
+ "IdentifyBradycardia"   ,  "IdentifyHypotension"     ,         "RespondHypoventilation" ,
+ "RespondHypoxia"      ,      "RespondBradycardia"    ,  "RespondHypotension" ,
+"NontechAssess"  ,"NontechAccessAssist","NontechRespond",
+"OPA"     ,                "NPA"          ,           "JawSupport"  ,           
+"ChinLift"), to = c("Assess risk from anaesthetic history" ,        "Assess risk from sleep apnoea"       ,          "Determine risk for difficult intubation"    ,   "Determine risk for difficult bag mask ventilation"           
+,"Assess risk from ASA classification status"        ,            "Assess risk from body mass index"          ,       "Assess risk from cardiorespiratory reserve",
+"Identify hypoventilation", "Identify abnormal respiratory rate"    ,    "Identify allergic reactions"  ,
+ "Identify bradycardia"   ,  "Identify hypotension"     ,         "Respond to hypoventilation" ,
+ "Respond to hypoxia"      ,      "Respond to bradycardia"    ,  "Respond to hypotension" ,
+"Cease procedure to assess patient"  ,"Cease procedure to gain extra assistance","Cease procedure to treat complication",
+"Insert oropharyngeal airway"     ,                "Insert nasopharyngeal airway"          ,           "Apply jaw support"  ,           
+"Apply chin lift"))
+names=c("Item", "Factor", "Loading")
+colnames(t1)=names
+
+library(ggplot2)
+#For each test, plot the loading as length and fill color of a bar
+# note that the length will be the absolute value of the loading but the 
+# fill color will be the signed value, more on this below
+
+ggplot(t1, aes(Item, abs(Loading), fill=Loading)) + 
+  facet_wrap(~ Factor, nrow=1) + #place the factors in separate facets
+  geom_bar(stat="identity") + #make the bars
+  coord_flip() + #flip the axes so the test names can be horizontal  
+  #define the fill color gradient: blue=positive, red=negative
+  scale_fill_gradient2(name = "Loading", 
+                       high = "blue", mid = "white", low = "red", 
+                       midpoint=0, guide=F) +
+  ylab("Loading Strength") + #improve y-axis label
+  theme_bw(base_size=10) #use a black and white theme with set font size
+
+```
+
+
+##Test construct validity through multiple regression of factors potentially associated with confidence in managing sedation-related complications
+
+Create total general self efficacy scale score
+
+```{r}
+data$GSE=rowSums(data[,14:21], na.rm = FALSE)
+head(data$GSE)
+```
+
+Create critical care dummy variable
+
+
+```{r}
+data$critcare=data$Specialty==10|data$Specialty==9|data$Specialty==8|data$Specialty==7
+```
+
+Load the broom, dplyr and kableExtra packages
+
+```{r}
+library(broom)
+library(kableExtra)
+library(dplyr)
+```
+
+
+
+Model for total score 
+```{r}
+model=lm(total~YearsNursing+ PSAFrequency+ YearsPSA+ ALS+ PSAEducation+ GSE+ critcare+ PSAPolicy+ Competency+ OverallKnowledge, data)
+kable(tidy(model, conf.int=TRUE))
+```
+
+Plot
+
+```{r}
+ggplot(tidy(model, conf.int=TRUE), aes(estimate, term, color = term)) +
+  geom_point() +
+  geom_errorbarh(aes(xmin = conf.low, xmax = conf.high)) +
+  geom_vline(aes(xintercept=0))+
+  scale_y_discrete(labels = c("(Intercept)", "ALS", "Unit has a PSA Competency", "Critical care", "General self-efficacy", "Sedation knowledge rating", "Education", "Frequency using PSA", "Unit has a PSA Policy", "Years Nursing", "Years administering sedation")) +
+  theme(legend.position="none")+
+  labs(y = "Predictor", x="Estimate") + 
+  theme(axis.title.y = element_text(size = 14, face = "bold"), axis.title.x = element_text(size = 14, face = "bold"))+
+    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank())
+```
+
+ggcoefstats plot
+
+https://cran.r-project.org/web/packages/ggstatsplot/vignettes/ggcoefstats.html
+
+
+Model for risk assessment scale 
+```{r}
+model=lm(data$risk~data$YearsNursing+data$PSAFrequency+data$YearsPSA+data$ALS+data$PSAEducation+data$GSE+data$critcare+data$PSAPolicy+data$Competency + data$OverallKnowledge)
+summary(model)
+```
+
+Model for identifying and responding to complications scale 
+```{r}
+model=lm(data$identify~data$YearsNursing+data$PSAFrequency+data$YearsPSA+data$ALS+data$PSAEducation+data$GSE+data$critcare+data$PSAPolicy+data$Competency+ data$OverallKnowledge)
+summary(model)
+```
+
+Model for technical skills scale 
+```{r}
+model=lm(data$tech~data$YearsNursing+data$PSAFrequency+data$YearsPSA+data$ALS+data$PSAEducation+data$GSE+data$critcare+data$PSAPolicy+data$Competency+ data$OverallKnowledge)
+summary(model)
+```
+
+
+Model for non-technical skills scale 
+```{r}
+model=lm(data$nontech~data$YearsNursing+data$PSAFrequency+data$YearsPSA+data$ALS+data$PSAEducation+data$GSE+data$critcare+data$PSAPolicy+data$Competency+ data$OverallKnowledge)
+summary(model)
+```
+
+*consider doing plots of multiple regressions using ggstatsplot:: ggcoefstats*
+https://cran.r-project.org/web/packages/ggstatsplot/vignettes/ggcoefstats.html
+
+*plots for associations between total scores and explanatory variables*
+
+```{r}
+ggplotRegression <- function (fit) {
+  
+  library(ggplot2)
+  
+  ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) + 
+    geom_point() +
+    theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+    stat_smooth(method = "lm", col = "red") +
+    labs(title = paste("Adj R squared = ",signif(summary(fit)$adj.r.squared, 5),
+                       "Intercept =",signif(fit$coef[[1]],5 ),
+                       " Slope =",signif(fit$coef[[2]], 5),
+                       " P =",signif(summary(fit)$coef[2,4], 5)))
+}
+
+ggplotRegression(lm(total ~ OverallConfidence, data = data))
+ggplotRegression(lm(total ~ OverallKnowledge, data = data))
+ggplotRegression(lm(total ~ YearsPSA, data = data))
+ggplotRegression(lm(total ~ YearsNursing, data = data))
+ggplotRegression(lm(total ~ PSAFrequency, data = data))
+ggplotRegression(lm(total ~ GSE, data = data))
+```
+
+*Reliability analysis*
+```{r}
+reliability.total=psych::alpha(df1)$total$std.alpha
+
+dfnontech=data.frame(data$NontechAccessAssist, data$NontechRespond, data$NontechAssess)
+reliability.nontech=psych::alpha(dfnontech)$total$std.alpha
+
+dftech=data.frame(data$ChinLift, data$JawSupport, data$NPA, data$OPA)
+reliabilitytech=psych::alpha(dftech)$total$std.alpha
+
+dfrisk=data.frame(df1[,1:7])
+reliabilityrisk=psych::alpha(dfrisk)$total$std.alpha
+
+dfidentify=data.frame(df1[,c(8:12,14:17)])
+reliability.identify=psych::alpha(dfidentify)$total$std.alpha
+data.frame(reliability.total,reliability.identify,reliability.nontech, reliabilitytech, reliabilityrisk)
+```
+
+##Responsiveness
+
+Load data
+
+```{r}
+responsiveness <- readr::read_csv("data/responsiveness.csv")
+```
+
+
+Create pre NC-MSCS scores
+
+Print variable pre-test variable names
+```{r}
+names.list=names(responsiveness)
+```
+
+Print variable pre-test variable names
+```{r}
+variablenames.mscsPost=dput(grep(".post$", names(responsiveness), value=TRUE))
+names.list[29:30]
+```
+
+
+```{r}
+
+pre.keys=list(risk=c("Risk_anaesthesia_pre", "Risk_OSA_pre" ,          "Risk_intubate_pre"     ,     "Risk_BMV_pre"       ,        "Risk_ASA_pre" ,    "Risk_BMI_pre"         ,      "Risk_cardiorespiratory_pre"),
+identify=c("Identify_hypoventilation_pre", "Identify_resprate_pre"     ,   "Identify_allergic_pre"     ,   "Identify_sedationlevel_pre" ,"Respond_hypoventilation_pre", "Respond_hypoxia_pre","Respond_bradycardia_pre", "Respond_hypotension_pre" ),
+tech=c("Intervention_OPA_pre"     ,                "Intervention_NPA_pre"          ,           "Intervention_jawsupport_pre"  , 
+"Intervention_chinlift_pre" ),
+nontech=c("Nontech_access_assistance_pre", "Nontech_respond_pre", "Nontech_assessment_pre"),
+total=c("Risk_OSA_pre" ,          "Risk_intubate_pre"     ,     "Risk_BMV_pre"       ,        "Risk_ASA_pre" ,"Risk_comorbidities_pre" ,    "Risk_BMI_pre"         ,      "Risk_cardiorespiratory_pre","Identify_hypoventilation_pre", "Identify_resprate_pre"     ,   "Identify_allergic_pre"     ,   "Identify_sedationlevel_pre" ,"Respond_hypoventilation_pre", "Respond_hypoxia_pre","Respond_bradycardia_pre", "Respond_hypotension_pre","Intervention_OPA_pre"     ,                "Intervention_NPA_pre"          ,           "Intervention_jawsupport_pre"  , 
+"Intervention_chinlift_pre" ,"Nontech_access_assistance_pre", "Nontech_respond_pre", "Nontech_assessment_pre"))
+
+post.keys=list(risk=c("Risk_anaesthesia_post","Risk_OSA_post" ,          "Risk_intubate_post"     ,     "Risk_BMV_post"       ,        "Risk_ASA_post" ,    "Risk_BMI_post"         ,      "Risk_cardiorespiratory_post"),
+identify=c("Identify_hypoventilation_post", "Identify_resprate_post"     ,   "Identify_allergic_post"     ,   "Identify_sedationlevel_post" ,"Respond_hypoventilation_post", "Respond_hypoxia_post","Respond_bradycardia_post", "Respond_hypotension_post" ),
+tech=c("Intervention_OPA_post"     ,                "Intervention_NPA_post"          ,           "Intervention_jawsupport_post"  , 
+"Intervention_chinlift_post" ),
+nontech=c("Nontech_access_assistance_post", "Nontech_respond_post", "Nontech_assessment_post"),
+total=c("Risk_OSA_post" ,          "Risk_intubate_post"     ,     "Risk_BMV_post"       ,        "Risk_ASA_post" ,"Risk_comorbidities_post" ,    "Risk_BMI_post"         ,      "Risk_cardiorespiratory_post","Identify_hypoventilation_post", "Identify_resprate_post"     ,   "Identify_allergic_post"     ,   "Identify_sedationlevel_post" ,"Respond_hypoventilation_post", "Respond_hypoxia_post","Respond_bradycardia_post", "Respond_hypotension_post","Intervention_OPA_post"     ,                "Intervention_NPA_post"          ,           "Intervention_jawsupport_post"  , 
+"Intervention_chinlift_post" ,"Nontech_access_assistance_post", "Nontech_respond_post", "Nontech_assessment_post"))
+```
+
+
+```{r}
+pre.scales=scoreItems(pre.keys, responsiveness)
+pre.scores=pre.scales$scores
+post.scales=scoreItems(post.keys, responsiveness)
+post.scores=post.scales$scores
+```
+
+
+*Add scale scores to data frame*
+
+```{r}
+responsiveness$pre.risk=pre.scores[,1]
+responsiveness$pre.identify=pre.scores[,2]
+responsiveness$pre.nontech=pre.scores[,3]
+responsiveness$pre.tech=pre.scores[,4]
+responsiveness$pre.total=pre.scores[,5]
+
+responsiveness$post.risk=post.scores[,1]
+responsiveness$post.identify=post.scores[,2]
+responsiveness$post.nontech=post.scores[,3]
+responsiveness$post.tech=post.scores[,4]
+responsiveness$post.total=post.scores[,5]
+```
+
+###Describe scale scores
+
+```{r}
+plyr::count(responsiveness$pre.tech)
+plyr::count(responsiveness$pre.nontech)
+plyr::count(responsiveness$pre.risk)
+plyr::count(responsiveness$pre.identify)
+plyr::count(responsiveness$pre.total)
+plyr::count(responsiveness$PSAconfidence_pre)
+
+plyr::count(responsiveness$post.tech)
+plyr::count(responsiveness$post.nontech)
+plyr::count(responsiveness$post.risk)
+plyr::count(responsiveness$post.identify)
+plyr::count(responsiveness$post.total)
+plyr::count(responsiveness$PSAconfidence_post)
+responsiveness$totalchange=responsiveness$post.total- responsiveness$pre.total
+responsiveness$Confidence_change=responsiveness$PSAconfidence_post - responsiveness$PSAconfidence_pre
+describe(responsiveness[,73:83])
+```
+
+```{r}
+library(psychometric)
+
+sd=sd(responsiveness$totalchange, na.rm=TRUE)
+meanchange=mean(responsiveness$totalchange, na.rm=TRUE)
+SRM=meanchange/sd
+SRM
+GRI=meanchange/sd(responsiveness$pre.total, na.rm=TRUE)
+GRI
+```
+
+###Plots for paired data
+
+
+```{r}
+new=na.omit(data.frame(responsiveness$pre.total,responsiveness$post.total))
+columns2=c("before", "after")
+colnames(new)=columns2
+totalafter=new$after
+totalbefore=new$before
+
+risk=na.omit(data.frame(responsiveness$pre.risk,responsiveness$post.risk))
+columns2=c("before", "after")
+colnames(risk)=columns2
+riskafter=risk$after
+riskbefore=risk$before
+
+tech=na.omit(data.frame(responsiveness$pre.tech,responsiveness$post.tech))
+columns2=c("before", "after")
+colnames(tech)=columns2
+techafter=tech$after
+techbefore=tech$before
+
+library(PairedData)
+total <- paired(totalbefore, totalafter)
+plot(total, type = "profile") + theme_bw() +ggtitle("NC-MSCS scores before and after training in sedation") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
+risk <- paired(riskbefore, riskafter)
+plot(risk, type = "profile") + theme_bw() +ggtitle("Risk subscale scores before and after training in sedation") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
+tech <- paired(techbefore, techafter)
+plot(tech, type = "profile") + theme_bw() +ggtitle("Technical skills subscale scores before and after training in sedation") + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
+```
+
+2. Risk
+
+```{r}
+
+```
+
+
+
+Plot of correlations
+
+```{r}
+ggplotRegression(lm(totalchange ~ Confidence_change, data = responsiveness))
+
+
+```
+
