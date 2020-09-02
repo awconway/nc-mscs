@@ -6,7 +6,7 @@
 #' @importFrom tidyr pivot_longer
 #' @importFrom dplyr select
 #' @importFrom  ggplot2 aes ggplot geom_line geom_point theme element_blank
-#'
+#' theme_classic
 scree_plot <- function(ncmscs_items) {
   polycor <- polychoric(as.matrix(ncmscs_items), smooth = FALSE)
   ev <- eigen(cor(polycor$rho))
@@ -27,5 +27,8 @@ scree_plot <- function(ncmscs_items) {
     ggplot(aes(y = Eigenvalues, x = Components, color = type)) +
     geom_line() +
     geom_point() +
-    theme(legend.title = element_blank())
+    theme_classic()+
+    theme(legend.title = element_blank(),
+          legend.position = "top")
+
 }
