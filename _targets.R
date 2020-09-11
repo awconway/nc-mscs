@@ -223,7 +223,7 @@ tar_pipeline(
       ) %>%
       gtsummary::italicize_levels()
   ),
-  tarchetypes::tar_render(manuscript, "manuscript.Rmd"),
+  tarchetypes::tar_render(manuscript, "manuscript.rmd"),
   tar_target(risk_dist, make_dist_plot(
     ncmscs_df, risk,
     xaxis = "Risk assessment subscale"
