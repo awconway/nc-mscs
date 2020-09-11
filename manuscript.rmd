@@ -137,6 +137,8 @@ We aimed to recruit 8-10 participants for the expert panel survey, as has been r
 
 #### Statistical methods
 
+All analyses were conducted using R [@Rcore] and code to reproduce the analyses is available [here]([https://github.com/awconway/nc-mscs)](https://github.com/awconway/ptds)).
+
 For the expert panel survey, ratings of the relevance of items were used to compute the content validity index for each item by averaging the proportion of respondents that rated the item as a 3 or 4 (i.e. 'quite relevant' or 'highly relevant')[@Polit_2007]. Items with a content validity index of less than 0.78 were considered for revision and those with very low index values were considered for deletion[@Polit_2007]. Scale-level content validity index was also calculated by averaging across items [@polit2006]. In addition, the research team revised the wording of items based on panel members' responses regarding the clarity of items.
 
 For item reduction and examination of the structural validation of the NC-MSCS, the following analyses were undertaken using nurses' responses from the online survey. Ordinary least squares estimations with a matrix of polychoric correlations was generated for an exploratory factor analysis due to the use of ordinal response variables [@Gaskin_2014]. Parallel analysis was used to determine the optimal number of factors for extraction and principal axis factoring with promax rotation was used for factor extraction. Internal consistency, calculated using Cronbach's alpha coefficient, was calculated to examine the reliability of the scale. There was less than 2% missing data for all scale items. We imputed missing values using expectation maximization [@fox-wasylyshyn2005].

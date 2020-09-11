@@ -1,0 +1,21 @@
+FROM rocker/verse:latest
+
+RUN install2.r --error \
+    flextable \
+    officer \
+    officedown \
+    here \
+    gtsummary \
+    glue \
+    patchwork \
+    nFactors \
+    psych \
+    broom \
+    dabestr \
+    TestDataImputation
+    
+    RUN installGithub.r \
+    wlandau/tarchetypes \
+    wlandau/targets 
+
+
