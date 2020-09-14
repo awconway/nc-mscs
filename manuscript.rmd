@@ -23,7 +23,7 @@ institute:
   - NSW: Rural Clinical School, University of New South Wales, Coffs Harbour, NSW, Australia
   - Coffs: Department of Anaesthesia, Coffs Harbour Health Campus, Coffs Harbour, NSW, Australia
 bibliography: Extras/references.bib
-csl: Extras/harvard.csl
+csl: Extras/apa.csl
 output:
   officedown::rdocx_document:
     reference_docx: Extras/manuscript_template.docx
@@ -45,6 +45,20 @@ library(officedown)
 
 ```
 
+## Declarations
+
+Availability of data and material (data transparency): All data used is available [here](https://github.com/awconway/nc-mscs).
+
+Code availability: Code to reproduce the analyses is available [here](https://github.com/awconway/nc-mscs).
+
+Abbreviated title: Nursing confidence in managing sedation complications scale
+
+Funding statement: Support was provided solely from institutional and/or departmental sources.
+
+Conflicts of interest: The authors declare no competing interests.
+
+Author contributions: AC: Study design, data analysis and wrote manuscript; KC: Revised the manuscript for important intellectual content; NK: Revised the manuscript for important intellectual content; JS: Study design, data collection, revised the manuscript for important intellectual content.
+
 \pagebreak
 
 ## Abstract
@@ -65,23 +79,15 @@ Pre-specified criteria for content validity was met for 34 items. Responses from
 
 The NC-MSCS is a valid and reliable instrument, which could be used to guide and inform sedation training programs and competency assessments.
 
+## Impact statement
+
+What does this paper contribute to the wider global clinical community?
+
+-   The psychometric properties of the NC-MSCS appear encouraging. It could be a useful tool for self-reflection, or to guide and inform sedation training initiatives and to inform formal competency assessment activities.
+-   The 18-item NC-MSCS offers a very quick and simple tool for measuring self-efficacy in performing aspects of procedural sedation management.
+-   An online version of the complete scale can be accessed and scored [here](https://nc-mscs.netlify.app/).
+
 Keywords: deep sedation, conscious sedation, patient safety, self-efficacy, nursing, scale development, item response theory
-
-\pagebreak
-
-## Declarations
-
-Availability of data and material (data transparency): All data used is available [here](https://github.com/awconway/nc-mscs).
-
-Code availability: Code to reproduce the analyses is available [here](https://github.com/awconway/nc-mscs).
-
-Abbreviated title: Nursing confidence in managing sedation complications scale
-
-Funding statement: Support was provided solely from institutional and/or departmental sources.
-
-Conflicts of interest: The authors declare no competing interests.
-
-Author contributions: AC: Study design, data analysis and wrote manuscript; KC: Revised the manuscript for important intellectual content; NK: Revised the manuscript for important intellectual content; JS: Study design, data collection, revised the manuscript for important intellectual content.
 
 \pagebreak
 
@@ -89,11 +95,13 @@ Author contributions: AC: Study design, data analysis and wrote manuscript; KC: 
 
 Sedative and analgesic medications can be administered to manage pain, discomfort and anxiety or distress during diagnostic and/or interventional procedures that do not require general anaesthesia. This practice is referred to as procedural sedation and analgesia (PSA) [@apfelbaum2018practice]. It is common for nurses to administer the sedative and analgesic medications according to prescription from the medical practitioner performing the procedure and to monitor the patient (termed nurse-administered PSA) [@Conway_2014]. Complications are known to arise during PSA due to side effects of sedative and analgesic medications [@apfelbaum2018practice]. For example, the sedative medications can cause relaxation of muscles and hence loss of ability to maintain a patent airway. The analgesic medications used (typically the opioids) can also cause the breathing rate to be depressed. If such complications are not detected and corrective interventions applied, the level of oxygen circulating in the blood can drop to a level that is insufficient for the body's requirements (a condition known as hypoxaemia). If severe enough and left uncorrected, hypoxaemia can result in permanent damage to vital organs, such as the brain and heart, potentially causing serious adverse evnts, such as permanent neurological disability or death. Intervening at or soon after the onset of complications can prevent these adverse events from occurring. Therefore, prompt detection and treatment of sedation-related complications is vital to ensure patient safety during procedures performed with PSA [@Bhananker_2006].
 
+## Background
+
 Self-efficacy is a measure of one's beliefs in their own capability to produce given attainments [@Bandura_1995]. Previous research has demonstrated that people will exert maximal effort and persist despite failure if they believe they are capable in completing a given task [@bandura1999self]. In the healthcare context, it has been shown that clinicians who lack confidence in their abilities do not take needed actions for their patients [@Johnson_2001]. Therefore, it is possible that nurses may not take actions to manage sedation-related complications if they lack confidence in their abilities to complete the necessary tasks. Despite clear relevance, there has been no research about nurses' self-efficacy in managing the complications that arise due to side effects of sedation and analgesic medications administered during medical procedures. For this reason, the aim of this study is to develop an instrument that measures nurses' self-efficacy in managing complications that are known to arise due to side effects of sedative and analgesic medications administered during medical procedures. We have named this instrument the Nursing Confidence in Managing Sedation Complications Scale (NC-MSCS). Once validated, the NC-MSCS could be used in practice to inform the development and evaluation of nursing education programs about the management of complications during sedation. The scale could also be used in the research context as an instrument to compare the effectiveness of different nursing education programs about procedural sedation in improving nursing confidence.
 
 ## Methods
 
-The NC-MSCS was developed and validated through three phases. Content validity of the items was evaluated in the first phase with input from an expert panel of clinicians with expertise in procedural sedation. In the second phase, a survey study was undertaken for item reduction and to evaluate the structural validity of the scale. In the third phase, responsiveness was evaluated using a pre-test post-test design.
+The NC-MSCS was developed and validated through three phases. Content validity of the items was evaluated in the first phase with input from an expert panel of clinicians with expertise in procedural sedation. In the second phase, a survey study was undertaken for item reduction and to evaluate the structural validity of the scale. In the third phase, responsiveness was evaluated using a pre-test post-test design. Ethical approval was provided by the Queensland University of Technology Human Research Ethics Committee (61986 and 56161).
 
 ### Participants
 
@@ -137,7 +145,7 @@ We aimed to recruit 8-10 participants for the expert panel survey, as has been r
 
 #### Statistical methods
 
-All analyses were conducted using R [@Rcore] and code to reproduce the analyses is available [here]([https://github.com/awconway/nc-mscs)](https://github.com/awconway/ptds)).
+All analyses were conducted using R [@Rcore] and code to reproduce the analyses is available [here](https://github.com/awconway/nc-mscs).
 
 For the expert panel survey, ratings of the relevance of items were used to compute the content validity index for each item by averaging the proportion of respondents that rated the item as a 3 or 4 (i.e. 'quite relevant' or 'highly relevant')[@Polit_2007]. Items with a content validity index of less than 0.78 were considered for revision and those with very low index values were considered for deletion[@Polit_2007]. Scale-level content validity index was also calculated by averaging across items [@polit2006]. In addition, the research team revised the wording of items based on panel members' responses regarding the clarity of items.
 
@@ -180,27 +188,23 @@ A total of `r nrow(targets::tar_read(resp_change))` nurses participated in the p
 
 The aim of this study was to develop a scale to measure nursing confidence in managing sedation-related complications. A large sample of nurses with diverse clinical experience across the numerous specialties in which sedation is frequently used participated in the study. This provided the opportunity to eliminate redundancy from an initial comprehensive item pool, which was created by the authors of this study but refined by an expert panel using a rigorous process for establishing content validity [@Polit_2007]. The resultant 18-item NC-MSCS demonstrated a robust 3-factor structure with high internal consistency overall, as well as for each subscale measuring the domains of confidence in risk assessment, identification and responses to cardiorespiratory complications and application of airway interventions. Importantly, the scale was able to distinguish between-group differences based on specialty expertise. Nurses who worked in critical care areas (defined as ICU, emergency or anaesthesia/recovery) reported considerably higher levels of confidence in managing sedation-related complications compared with nurses who worked in other specialties (eg. cardiac cath lab, radiology, endoscopy surgery). Effect sizes for associations between NC-MSCS and years of experience in nursing, general self-efficacy and general knowledge about managing sedation-related complications were statistically significant but very small.
 
-The NC-MSCS does not attempt to measure over-complicated activities or tasks that go beyond nurses' knowledge or competences related to administering and monitoring procedural sedation, which have been outlined in clinical practice guideline statements from professional societies [@apfelbaum2018practice; @conway2013]. The 18-item NC-MSCS offers a very quick and simple tool for measuring self-efficacy in performing such aspects of procedural sedation management. Although no prior research has specifically examined the effect of low levels of confidence toward the optimal management of sedation-related complications, research from other similar clinical contexts provides some insight. For example, research in the resuscitation context has consistently demonstrated that lack of confidence is a barrier to achieving good quality cardiopulmonary resuscitation [@vaillancourt2013; @roh2012]. Therefore, the NC-MSCS could be a useful tool for self-reflection, or to guide and inform sedation training initiatives and to inform formal competency assessment activities. An online version of the complete scale can be accessed and scored [here](https://nc-mscs.netlify.app/).
-
 The right-skewed distribution of subscale scores in the online survey should be noted. We used polychoric correlations for the exploratory factor analysis, which is the recommended approach for skewed data [@Gaskin_2014; @vandereijk2015]. Although the potential for a ceiling effect should not be ruled out, it is reassuring that the distribution of scores in the pre-sedation training group was not right-skewed. It is likely the higher ratings for items within these particular subscales that were observed in the online survey were associated with specific characteristics of the sample, such as participants' years of experience in nursing and the clinical settings in which the participants practiced (e.g. critical care setting versus procedural/medical settings).
-
-<!--# The factor structure identified through exploratory factor analysis did not exactly align with the conceptual framework we used to create the initial bank of items. The bank of items was constructed with a tentative 4-domain structure, whereas parallel analysis indicated a 3-factor structure was the most parsimonious solution.  -->
 
 The sample for the online survey was highly experienced and reported high levels of confidence in managing sedation complications. A convenience sampling approach and recruitment of participants through professional nursing organizations is the likely cause. The sample is therefore not entirely representative of the broader population of nurses who are involved in the management of procedural sedation. Prior research has identified that although sampling through professional organizations is a convenient approach to access a more broadly geographically distributed sample, it does not adequately represent the characteristics of the population [@gillespie2010sampling]. Conducting confirmatory factor analysis with a different sample of nurses would be useful to determine if the factor structure we identified is robust to sampling procedures.
 
-<!--# The risk assessment and identification/responses to cardiorespiratory complications factors explained a considerably percentage of variance than the factor containing items related to technical airway skills. Different patient characteristics in the responsiveness study. -->
-
 If adjusted for the correlation between pre and post measurements, Cohen's rule-of-thumb thresholds for interpreting effect size can be applied for the standardized response mean, which was one statistic we used to assess responsiveness of the NC-MSCS [@sivan2009; @cohen2013statistical]. Results indicate there was a large improvement in confidence in the pre-test post-test study (SRMadj 1.3). In addition, there was a positive and strong relationship between changes in the NC-MSCS from pre to post training with perceived changes in overall knowledge and confidence. It is reassuring that the NC-MSCS was able to detect a change in participants' confidence after undertaking a formal education session in management of sedation. Undertaking further investigations, such as test-retest reliability to determine the minimal detectable difference in NC-MSCS scores, would be required in order for this scale to be used with confidence as a measure to judge the effectiveness of particular sedation training programs/modes of sedation training. For example, considering the not insignificant costs associated with in-person training, there may be advantages to delivering all or part of sedation education using more affordable and accessible online virtual modalities [@tobin2013]. One way the efficacy of these alternative approaches could be compared would be to use the NC-MSCS as an outcome measure.
-
-In many institutions, considerable time and effort is directed towards annual competency assessments for a variety of aspects of clinical care. Competency in procedural sedation is one such area. The timeframe for such assessments, however, seems to be arbitrarily set and there is limited consideration of tailoring assessment to nurses individual capabilities and education needs. Application of the NC-MSCS in education practice could be useful as a tool to stratify more experienced nurses to receive either further education and training in sedation (low confidence) or straight to simulation testing to ensure inaccurate calibration (high confidence but poor performance) is not an issue.
 
 ### Limitations
 
 Respondents in the online survey were relatively homogenous in regard to having a large amount of experience in sedation as well as being highly experienced nurses. We recommend future testing of the NC-MSCS in samples with greater heterogeneity. A convenience sampling approach was used for the pre-test post-test study. As such, selection bias may have influenced the results of the analyses conducted to evaluate the responsiveness of the NC-MSCS. Further psychometric testing to establish criterion-related validity and test--retest reliability would strengthen confidence in the usefulness of the NC-MSCS.
 
-### Conclusion
+## Conclusion
 
 Self-efficacy is a strong predictor of the level of accomplishment that individuals attain [@bandura1999self]. Nurses may fail to apply their knowledge and skills successfully unless they have an adequate level of self-efficacy in tasks related to management of procedural sedation. The psychometric properties of the NC-MSCS appear encouraging. Further testing of the instrument is required in different samples to provide further evidence of validity and to determine the minimal important difference. A particularly important further test of the validity of the NC-MSCS will be to determine if higher levels of confidence (as assessed by the scale) are associated with safer patient care. This scale could be used to guide and inform education and training of nurses as well as complement formal competency assessment.
+
+## Relevance to clinical practice
+
+The NC-MSCS does not attempt to measure over-complicated activities or tasks that go beyond nurses' knowledge or competences related to administering and monitoring procedural sedation, which have been outlined in clinical practice guideline statements from professional societies [@apfelbaum2018practice; @conway2013]. The 18-item NC-MSCS offers a very quick and simple tool for measuring self-efficacy in performing such aspects of procedural sedation management. Although no prior research has specifically examined the effect of low levels of confidence toward the optimal management of sedation-related complications, research from other similar clinical contexts provides some insight. For example, research in the resuscitation context has consistently demonstrated that lack of confidence is a barrier to achieving good quality cardiopulmonary resuscitation [@vaillancourt2013; @roh2012]. Therefore, the NC-MSCS could be a useful tool for self-reflection, or to guide and inform sedation training initiatives and to inform formal competency assessment activities. An online version of the complete scale can be accessed and scored [here](https://nc-mscs.netlify.app/). Also of note, considerable time and effort is directed in many hospitals towards annual competency assessments for a variety of aspects of clinical care. Competency in procedural sedation is one such area. The timeframe for such assessments, however, seems to be arbitrarily set and there is limited consideration of tailoring assessment to nurses individual capabilities and education needs. Application of the NC-MSCS in education practice could be useful as a tool to stratify more experienced nurses to receive either further education and training in sedation (low confidence) or straight to simulation testing to ensure inaccurate calibration (high confidence but poor performance) is not an issue. Further research would be required to evaluate the efficacy of this approach.
 
 \pagebreak
 
