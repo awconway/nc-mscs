@@ -63,21 +63,21 @@ Author contributions: AC: Study design, data analysis and wrote manuscript; KC: 
 
 ## Abstract
 
-### Introduction
+### Aim
 
-It is possible that nurses may not take actions to manage sedation-related complications if they lack confidence in their abilities to complete the necessary tasks. The aim of this study was to develop the Nursing Confidence in Managing Sedation Complications Scale (NC-MSCS).
+To develop the Nursing Confidence in Managing Sedation Complications Scale (NC-MSCS).
+
+### Design
+
+A multi-phased approach was used to inspect the psychometric properties of the scale.
 
 ### Methods
 
-An expert panel rated the relevance of an initial bank of items. Items with a content validity index of less than 0.78 were revised or deleted. An online survey containing items from the revised scale was distributed to nurses who were members of five different specialty nursing associations in Australia. Principal axis factoring and promax rotation was used for factor extraction. Multivariable linear regression was used to identify associations between scale scores and nurses' experience and education regarding sedation. Internal consistency was calculated to examine reliability. Responsiveness was evaluated using a pre-test post-test design with a sample of nurses who completed a sedation education program.
+Content validity was assessed by an expert panel. Exploratory factor analysis was used for item reduction and multivariable linear regression was used to explore construct validity. Responsiveness was evaluated using a pre-test post-test design.
 
 ### Results
 
-Pre-specified criteria for content validity was met for 34 items. Responses from 228 nurses who participated in the online survey were analysed. An 18-item, 3-factor solution was identified as the most parsimonious solution, with subscales accounting for 65.6% of the variance. Cronbach's alpha for the scale (`r round(targets::tar_read(reliability_total)$total$std.alpha, 2)`) and subscales was high (\>0.85). There were significant differences (p\<0.001) in NC-MSCS scores relative to years of nursing experience and work environment (critical care/anaesthesia versus procedural/operating theatre). The change in NC-MSCS scores reported by the 31 nurses who participated in the pre-test post-test study increased significantly from before to after sedation training (mean difference = `r glue::glue("{round(targets::tar_read(paired_diff)$result$difference, 1)}; 95% CI = {round(targets::tar_read(paired_diff)$result$pct_ci_low, 1)}-{round(targets::tar_read(paired_diff)$result$pct_ci_high, 1)}")`). Change in NC-MSCS was correlated with the change in overall confidence and knowledge about managing sedation complications.
-
-### Conclusion
-
-The NC-MSCS is a valid and reliable instrument, which could be used to guide and inform sedation training programs and competency assessments.
+Pre-specified criteria for content validity was met for 34 items. Responses from 228 nurses who participated in the online survey were analysed. An 18-item, 3-factor solution was identified, with subscales accounting for 66% of the variance. Cronbach's alpha for the scale (`r round(targets::tar_read(reliability_total)$total$std.alpha, 2)`) and subscales was high (\>0.85). There were significant differences (p\<0.001) in NC-MSCS scores relative to years of nursing experience and work environment. NC-MSCS scores from a sample of 31 nurses increased significantly from before to after sedation training (mean difference = `r glue::glue("{round(targets::tar_read(paired_diff)$result$difference, 1)}; 95% CI = {round(targets::tar_read(paired_diff)$result$pct_ci_low, 1)}-{round(targets::tar_read(paired_diff)$result$pct_ci_high, 1)}")`).
 
 ## Impact statement
 
@@ -101,7 +101,7 @@ Self-efficacy is a measure of one's beliefs in their own capability to produce g
 
 ## Methods
 
-The NC-MSCS was developed and validated through three phases. Content validity of the items was evaluated in the first phase with input from an expert panel of clinicians with expertise in procedural sedation. In the second phase, a survey study was undertaken for item reduction and to evaluate the structural validity of the scale. In the third phase, responsiveness was evaluated using a pre-test post-test design. Ethical approval was provided by the Queensland University of Technology Human Research Ethics Committee (61986 and 56161).
+The NC-MSCS was developed and validated through three phases. Content validity of the items was evaluated in the first phase with input from an expert panel of clinicians with expertise in procedural sedation. In the second phase, a survey study was undertaken for item reduction and to evaluate the structural validity of the scale. In the third phase, responsiveness was evaluated using a pre-test post-test design. The STROBE checklist was used to guide the reporting of results.
 
 ### Participants
 
@@ -163,6 +163,10 @@ Construct validity was evaluated by using multivariable linear regression to ide
 -   nurses who worked in critical care (emergency department/ICU/PACU) or anaesthesia.
 
 To evaluate responsiveness, analyses focused on testing the hypothesis that there would be a positive correlation between the change in participants NC-MSCS scores and changes in participant ratings of their overall knowledge and confidence in managing sedation complications from before to after undertaking a training course in sedation. Linear regression was used to determine the association between the change in NC-MSCS scores from pre to post training and the extent to which participants' perceied their overall knowledge and confidence in managing PSA complications had changed. We used Tufte Slopegraph to visually display the change in NC-MSCS scores from the pre to post time-points, and used bootstrap estimation (5000 resamples) to calculate the mean difference with 95% confidence intervals [@ho2019]. A standardized response mean (mean change divided by the standard deviation of the change score) was also calculated.
+
+### Ethics
+
+Ethical approval was provided by the Queensland University of Technology Human Research Ethics Committee (61986 and 56161).
 
 ## Results
 
