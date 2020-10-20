@@ -1,0 +1,63 @@
+---
+toname: Nursing Open
+toaddress: Editorial Board
+opening: To the editor, 
+closing: Regards,
+spacing: 1
+output: ConwayLetterTemplate::letter
+---
+
+Thank you for allowing us to revise our manuscript for further consideration for publication. Please find our responses to the comments from the reviewers below.
+
+# Reviewer 1
+
+*In this study, an instrument measuring nursing confidence in managing sedation complications was developed and validated. The paper English language is well. In my opinion, this is a well-written manuscript that needs few corrections or clarification.*
+
+>Thank you for reviewing our manuscript.
+
+## Abstract
+
+*Methods: Please mention how items were generated.*
+
+>We have added the following sentence to the methods:
+
+>'An initial bank of items was created based on the authors’ experience and clinical practice guidelines.'
+
+## Methods
+
+*How many experts did participate in this phase?*
+
+>We reported that 9 participants were included in the content validity process in the results section (content validity section page 11).
+
+*I highlighted a spelling error on page 10.*
+
+>Corrected
+
+*Pre-test post-test study page 8: How does this question (Participants were also asked to rate the extent to which their overall knowledge and confidence changed from before to after the sedation training, using a 7-point rating scale from greatly decreased (1) to greatly increased) help in the process of the scale development?*
+
+>This question was used to evaluate responsiveness, as reported in the statistical analysis section (last paragraph page 10):
+
+>'To evaluate responsiveness, analyses focused on testing the hypothesis that there would be a positive correlation between the change in participants NC-MSCS scores and changes in participant ratings of their overall knowledge and confidence in managing sedation complications from before to after undertaking a training course in sedation.'
+
+## Results
+
+
+*The internal consistency of the scale and its subscales should be mentioned.*
+
+>We reported the Cronbach’s alpha coefficient in the results section - page 12.
+
+*Please explain why you did not exclude those who never administer or monitor patients who have received procedural sedation from the study.*
+
+>We have included a statement to justify inclusion of these participants in the limitations section where we address the potential for selection bias:
+
+>'A small number of participants in the online survey reported that they would not administer or monitor patients who have received procedural sedation in a typical working week. We chose not to exclude these patients from the analyses because it is possible that they did have experience using procedural sedation, but just do not currently use it during a typical working week.'
+
+# Reviewer 2
+
+*is good for assess*
+
+>Thank you for reviewing our manuscript.
+
+
+
+
