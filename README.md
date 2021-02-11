@@ -1,5 +1,7 @@
 # Development and validation of the nursing confidence in managing sedation complications scale
 
+## 📊 The full scale can be accessed and scored [here](https://nc-mscs.netlify.app)
+
 <!-- badges: start -->
 <!-- badges: end -->
 
